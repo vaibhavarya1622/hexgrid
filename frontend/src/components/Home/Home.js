@@ -1,10 +1,11 @@
 import React,{useState} from 'react'
+import { useHistory } from 'react-router';
 import './custom.css'
 import MapContainer from './../Map/Map'
 import LocationOnIcon from '@material-ui/icons/LocationOn';
 
-
 const Home=(props)=>{
+    let history=useHistory()
     const [radius,setRadius]=useState("")
     const [lat,setLat]=useState("")
     const [lng,setLng]=useState("")
@@ -41,6 +42,7 @@ const Home=(props)=>{
     
     const handleSubmit=(e)=>{
         e.preventDefault()
+        history.push('/get_data')
       }
       return(
         <div className='home'>

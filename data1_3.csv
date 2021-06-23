@@ -1,0 +1,11 @@
+{
+ "messages": [
+  {
+   "Alert": {
+    "Description": {
+     "Issue": "The Daily POWER Data Access Service is currently unavailable. Please check back at a later time. If you have any questions please contact us at larc-power-project@mail.nasa.gov Please reference our API Documentation at https://power.larc.nasa.gov for more information."
+    }
+   }
+  }
+ ]
+}

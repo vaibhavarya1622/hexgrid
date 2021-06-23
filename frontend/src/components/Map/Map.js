@@ -21,8 +21,6 @@ function generate(pt) {
   longi = pt.lng();
   lattosave.push(lati);
   longtosave.push(longi);
-  console.log('latitude',lattosave)
-  console.log('longitude',longtosave)
   return;
 
 }
@@ -117,7 +115,6 @@ function markhexagon(rad) {
       fillColor: "#F8FCFC",
       fillOpacity: 0.2,
   });
-  console.log(map)
   polygon.setMap(map);
 }
 
