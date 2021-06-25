@@ -7333,7 +7333,7 @@
  },
  "messages": [],
  "outputs": {
-  "csv": "https://power.larc.nasa.gov/downloads/POWER_SinglePoint_Daily_20000101_20200101_022d99N_078d67E_f507756d.csv"
+  "csv": "https://power.larc.nasa.gov/downloads/POWER_SinglePoint_Daily_20000101_20200101_022d99N_078d67E_3cd2c803.csv"
  },
  "parameterInformation": {
   "ALLSKY_SFC_SW_DWN": {
@@ -7348,7 +7348,7 @@
   ],
   [
    "Total Script:",
-   3.08
+   0.98
   ]
  ],
  "type": "FeatureCollection"
