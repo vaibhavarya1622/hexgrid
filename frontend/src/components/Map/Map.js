@@ -132,7 +132,7 @@ useEffect(()=>{
     outhexagonoverlay(radii);
     map.panTo({lat:props.lat,lng:props.lng})
     map.setZoom(12)
-    axios.post('http://127.0.0.1:5000/getlati',{
+    axios.post('/getlati',{
       latikey:lattosave
     })
     .then((res)=>{
@@ -142,7 +142,7 @@ useEffect(()=>{
       console.log(err)
     })
 
-    axios.post('http://127.0.0.1:5000/getlongi',{
+    axios.post('/getlongi',{
       longikey:longtosave
     })
     .then(res=>{

@@ -11,7 +11,7 @@ def index():
     return send_from_directory(app.static_folder,'index.html')
 
 @app.route('/getlati',methods=["POST"])
-@cross_origin()
+# @cross_origin()
 def getlati():
     if request.method == 'POST':
         value_lati = request.json['latikey']
@@ -20,7 +20,7 @@ def getlati():
         return "ok"
         
 @app.route('/getlongi',methods=["POST"])
-@cross_origin()
+# @cross_origin()
 def getlongi():
     if request.method == 'POST':
         value_longi = request.json['longikey']
@@ -29,7 +29,7 @@ def getlongi():
         return "ok"
 
 @app.route('/submit',methods=["POST"])
-@cross_origin()
+# @cross_origin()
 def submit():
     start_date=request.json['start_date']
     end_date=request.json['end_date']
@@ -40,10 +40,10 @@ def submit():
     return "success",200
 
 @app.route('/fetch_from_nasa')
-@cross_origin()
+# @cross_origin()
 def get_data():
     nasa.getvals()
     return 'success',200
 
-if __name__=='__main__':
-    app.run(debug=True)
+# if __name__=='__main__':
+#     app.run(debug=True)

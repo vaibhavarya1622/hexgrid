@@ -7333,7 +7333,7 @@
  },
  "messages": [],
  "outputs": {
-  "csv": "https://power.larc.nasa.gov/downloads/POWER_SinglePoint_Daily_20000101_20200101_022d99N_078d65E_649c467b.csv"
+  "csv": "https://power.larc.nasa.gov/downloads/POWER_SinglePoint_Daily_20000101_20200101_022d99N_078d65E_e553198b.csv"
  },
  "parameterInformation": {
   "ALLSKY_SFC_SW_DWN": {
@@ -7344,11 +7344,11 @@
  "time": [
   [
    "Main OPeNDAP Requests:",
-   0.21
+   0.23
   ],
   [
    "Total Script:",
-   1.05
+   0.96
   ]
  ],
  "type": "FeatureCollection"
