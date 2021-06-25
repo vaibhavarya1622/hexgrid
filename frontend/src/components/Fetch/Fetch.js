@@ -7,14 +7,13 @@ import 'bootstrap/dist/css/bootstrap.min.css'
 const Fetch=(props)=>{
     const [loading,setLoading]=useState(true)
     const [error,setError]=useState("")
-    axios.get('/fetch_from_nasa')
+    axios.get('http://127.0.0.1:5000/fetch_from_nasa')
     .then((response)=>{
         console.log(response)
         setLoading(false)
     })
     .catch(err=>{
         setError(err)
-        // setLoading(false)
         console.log(err)
     })
     return(

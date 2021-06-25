@@ -2,7 +2,11 @@ import React,{useState} from 'react'
 import { useHistory } from 'react-router';
 import './custom.css'
 import MapContainer from './../Map/Map'
+import axios from 'axios'
 import LocationOnIcon from '@material-ui/icons/LocationOn';
+import DatePicker from "react-datepicker";
+import "react-datepicker/dist/react-datepicker.css";
+import {Container,Row,Col} from 'reactstrap';
 
 const Home=(props)=>{
     let history=useHistory()
@@ -10,6 +14,8 @@ const Home=(props)=>{
     const [lat,setLat]=useState("")
     const [lng,setLng]=useState("")
     const [hexagon,setHexagon]=useState(false)
+    const [startDate,setStartDate]=useState(new Date())
+    const [endDate,setEndDate]=useState(new Date())
 
     const myLocation=()=>{
       var options = { maximumAge: 3000, timeout: 5000, enableHighAccuracy: true };//check if we don't get location in 30 seconds
@@ -42,18 +48,34 @@ const Home=(props)=>{
     
     const handleSubmit=(e)=>{
         e.preventDefault()
+        axios.post('http://127.0.0.1:5000/submit',{
+          start_date:startDate,
+          end_date:endDate
+        })
+        .then(response=>{
+          console.log(response)
+        })
+        .catch(error=>{
+          console.log(error)
+        })
         history.push('/get_data')
+      }
+      let submit={
+        background:'grey'
+      }
+      if(hexagon){
+        submit={}
       }
       return(
         <div className='home'>
-        <MapContainer radius={radius} lat={lat} lng={lng} hexagon={hexagon}/>
-        <div className="location-button">
-  <button onClick={myLocation} className="myLocationBtn">
-    <LocationOnIcon style={{ color: "#960A0A"}} />
-  </button>
-  </div>
-        <div class="login-page">
-          <div class="form">
+        <MapContainer 
+        radius={radius}
+        lat={lat}
+        lng={lng}
+        hexagon={hexagon}
+        />
+        <div className='form-page'>
+          <div className="form">
               <div class="login-header">
                   My Web App
               </div>
@@ -74,7 +96,7 @@ const Home=(props)=>{
                 value={lat}
                 placeholder="Enter latitude"
                 onChange={handleInput}
-                />
+                 />
               </div>
               <div className="group">
                 <input
@@ -83,6 +105,29 @@ const Home=(props)=>{
                 value={lng}
                 placeholder="Enter Longitude"
                 onChange={handleInput}
+                />
+                <div className='location-button'>
+                 <LocationOnIcon onClick={()=>myLocation()} style={{cursor:'pointer'}} />
+                 Click to set current location
+                </div>
+              </div>
+              <div className='group'>
+                <DatePicker
+                selected={startDate}
+                selectsStart
+                startDate={startDate}
+                endDate={endDate}
+                onChange={date => setStartDate(date)}
+                />
+              </div>
+              <div className='group'>
+                <DatePicker
+                  selected={endDate}
+                  selectsEnd
+                  startDate={startDate}
+                  endDate={endDate}
+                  minDate={startDate}
+                  onChange={date => setEndDate(date)}
                 />
               </div>
               <div className='group'>
@@ -94,11 +139,11 @@ const Home=(props)=>{
                 />Check box to show Hexagon
               </div>
               <div className="group">
-              <button className="button">Get the data!</button>
+              <button disabled={!hexagon} style={submit} className="button">Get the data!</button>
               </div>
             </form>
           </div>
-        </div>
+          </div>
         </div>
         )
     }

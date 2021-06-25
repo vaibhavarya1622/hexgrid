@@ -1,18 +1,25 @@
 .home{
   display:flex;
-  justify-content: space-between;
+  flex-wrap:wrap-reverse
 }
 .location-button{
-  position: absolute;
-  right:0;
+  position: relative;
+  padding:2px;
 }
 /*Track ambulance page */
-.login-page {
-    position: relative;
-    z-index: 10;
-    width: 360px;
-    padding: 8% 0 0;
-    margin: auto;
+.form-page {
+  background: repeating-linear-gradient(
+    -45deg,
+    white 0px,
+    white 4px,
+    transparent 4px,
+    transparent 12px
+  );
+    width:40%;
+    height: 100vh;
+    display: flex;
+    justify-content: center;
+    align-items: center;
   }
   .login-header{
     font-size: 1.4rem;
@@ -22,10 +29,9 @@
   }
   .form {
     position: relative;
+    background: #f2f2f2;
     z-index: 1;
-    background: #FFFFFF;
-    max-width: 380px;
-    margin: 0 auto 100px;
+    width: 70%;
     padding: 45px;
     text-align: center;
     box-shadow: 0 0 20px 0 rgba(0, 0, 0, 0.2), 0 5px 5px 0 rgba(0, 0, 0, 0.24);
@@ -44,7 +50,6 @@
   .form input {
     font-family: "Roboto", sans-serif;
     outline: 0;
-    background: #f2f2f2;
     border: 0;
     margin: 8px 0;
     padding: 15px;
@@ -58,7 +63,7 @@
   .form [type="checkbox"]{
     margin-right: 5px;
   }
-  .form button {
+  .form .button {
     font-family: "Roboto", sans-serif;
     border-radius:19px;
     text-transform: uppercase;
@@ -73,14 +78,14 @@
     cursor: pointer;
     border: 1px solid #0099cc;
   }
-  .form button:hover {
+  .form .button:hover {
     border: 1px solid #0099cc;
     background-color: #00aacc;
     color: #ffffff;
   }
   
-  .form button:disabled,
-  button[disabled]{
+  .form .button:disabled,
+  .button[disabled]{
     border: 1px solid #999999;
     background-color: #cccccc;
     color: #666666;
@@ -106,7 +111,7 @@
       font-size: 1.7rem;
       padding:20px;
     }
-    .form button{
+    .form .button{
       font-size: 1.5rem;
       padding:25px;
     }
@@ -114,6 +119,14 @@
       width:20px;
       margin:5px;
       height:20px;
+    }
+  }
+  .react-datepicker-wrapper{
+    display: block !important;
+  }
+  @media screen and (max-width:1120px) {
+    .form-page{
+      width:100%;
     }
   }
   /*Track ambulance page */
