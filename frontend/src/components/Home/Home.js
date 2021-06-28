@@ -1,21 +1,21 @@
 import React,{useState} from 'react'
-import { useHistory } from 'react-router';
 import './custom.css'
 import MapContainer from './../Map/Map'
 import axios from 'axios'
 import LocationOnIcon from '@material-ui/icons/LocationOn';
 import DatePicker from "react-datepicker";
 import "react-datepicker/dist/react-datepicker.css";
-import {Container,Row,Col} from 'reactstrap';
+import PropagateLoader from 'react-spinners/PropagateLoader'
+const FileDownload=require('js-file-download')
 
 const Home=(props)=>{
-    let history=useHistory()
     const [radius,setRadius]=useState("")
     const [lat,setLat]=useState("")
     const [lng,setLng]=useState("")
     const [hexagon,setHexagon]=useState(false)
     const [startDate,setStartDate]=useState(new Date())
     const [endDate,setEndDate]=useState(new Date())
+    const [status,setStatus]=useState(0)
 
     const myLocation=()=>{
       var options = { maximumAge: 3000, timeout: 5000, enableHighAccuracy: true };//check if we don't get location in 30 seconds
@@ -41,14 +41,11 @@ const Home=(props)=>{
       else if(name==='lng'){
         setLng(value)
       }
-      else if(name==='hexagon'){
-        setHexagon(!hexagon)
-      }
     }
     
     const handleSubmit=(e)=>{
         e.preventDefault()
-        axios.post('/submit',{
+        axios.post('http://127.0.0.1:5000/submit',{
           start_date:startDate,
           end_date:endDate
         })
@@ -58,14 +55,20 @@ const Home=(props)=>{
         .catch(error=>{
           console.log(error)
         })
-        history.push('/get_data')
+        setStatus(1)
+        setHexagon(true)
       }
-      let submit={
-        background:'grey'
-      }
-      if(hexagon){
-        submit={}
-      }
+    const handleDownload=(e)=>{
+      e.preventDefault();
+      axios.get('http://127.0.0.1:5000/download')
+      .then(response=>{
+        FileDownload(response.data,'correlation.csv')
+      })
+      .catch(error=>{
+        console.log(error)
+      })
+      window.location.reload(true)
+    }
       return(
         <div className='home'>
         <MapContainer 
@@ -73,13 +76,14 @@ const Home=(props)=>{
         lat={lat}
         lng={lng}
         hexagon={hexagon}
+        setStatus={setStatus}
         />
         <div className='form-page'>
           <div className="form">
               <div class="login-header">
                   My Web App
               </div>
-            <form onSubmit={handleSubmit}>
+            <form>
               <div className="group">
                 <input
                 type="text"
@@ -117,7 +121,7 @@ const Home=(props)=>{
                 selectsStart
                 startDate={startDate}
                 endDate={endDate}
-                onChange={date => setStartDate(date)}
+                onChange={date => {setStartDate(date); console.log(startDate)}}
                 />
               </div>
               <div className='group'>
@@ -131,15 +135,14 @@ const Home=(props)=>{
                 />
               </div>
               <div className='group'>
-                <input
-                type='checkbox'
-                name='hexagon'
-                value={hexagon}
-                onChange={handleInput}
-                />Check box to show Hexagon
-              </div>
-              <div className="group">
-              <button disabled={!hexagon} style={submit} className="button">Get the data!</button>
+                {
+                  (status===0)?
+                    <button onClick={handleSubmit} className="button">Submit data!</button>
+                  :(status===1)?
+                    <div className='loader'><PropagateLoader size={15}/></div>
+                  :
+              <button  className="button" onClick={handleDownload}>Download data!</button>
+                  }
               </div>
             </form>
           </div>

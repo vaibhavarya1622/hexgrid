@@ -6,15 +6,9 @@
   position: relative;
   padding:2px;
 }
-/*Track ambulance page */
+
 .form-page {
-  background: repeating-linear-gradient(
-    -45deg,
-    white 0px,
-    white 4px,
-    transparent 4px,
-    transparent 12px
-  );
+  background-color: #81776f;
     width:40%;
     height: 100vh;
     display: flex;
@@ -29,7 +23,7 @@
   }
   .form {
     position: relative;
-    background: #f2f2f2;
+    background: #cccccc;
     z-index: 1;
     width: 70%;
     padding: 45px;
@@ -124,9 +118,13 @@
   .react-datepicker-wrapper{
     display: block !important;
   }
+  .loader{
+    text-align: center;
+    padding:5px;
+    margin-top: 20px;
+  }
   @media screen and (max-width:1120px) {
     .form-page{
       width:100%;
     }
   }
-  /*Track ambulance page */

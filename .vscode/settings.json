@@ -1,0 +1,8 @@
+{
+    "python.envFile": "/home/vaibhav/hexgrid/myapp/env",
+    "python.analysis.extraPaths": [
+        "/home/vaibhav/hexgrid/myapp/env/lib/python3.8/site-packages",
+    ],
+    "python.analysis.autoImportCompletions": true,
+    "python.defaultInterpreterPath": "/home/vaibhav/hexgrid/myapp/env/lib/python3.8"
+}

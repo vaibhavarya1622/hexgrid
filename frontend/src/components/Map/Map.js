@@ -1,6 +1,4 @@
-import React, {useState,useEffect} from "react";
-import Fab from '@material-ui/core/Fab';
-import LocationOnIcon from '@material-ui/icons/LocationOn';
+import React, {useEffect} from "react";
 import axios from 'axios'
 import './custom.css'
 
@@ -11,7 +9,6 @@ var lattosave = [];
 var longtosave = [];
 
 const IndexMap =(props)=> {
-const [userLocation,setUserLocation]=useState([23,32])
 function generate(pt) {
   var lati;
   var longi;
@@ -93,6 +90,7 @@ function outhexagonoverlay(radii) {
           hexaptsout[(i + 1) % 6],
           0.5
       );
+      markpt(c)
       makehexagon(radii, c);
       hexaptsout.push(c);
   }
@@ -122,17 +120,14 @@ useEffect(()=>{
   if(props.hexagon){
     var radius=props.radius*1000;
     var radii=radius/Math.sqrt(3)
-    new window.google.maps.Marker({
-      map,
-      position:{lat:props.lat,lng:props.lng}
-    })
+    markpt(new window.google.maps.LatLng(props.lat,props.lng))
     markhexagon(radius)
     hexagonoverlay(radii);
     markouthexagon((2 * radius));
     outhexagonoverlay(radii);
-    map.panTo({lat:props.lat,lng:props.lng})
-    map.setZoom(12)
-    axios.post('/getlati',{
+    map.panTo(new window.google.maps.LatLng(props.lat,props.lng))
+    map.setZoom(11)
+    axios.post('http://127.0.0.1:5000/getlati',{
       latikey:lattosave
     })
     .then((res)=>{
@@ -141,11 +136,13 @@ useEffect(()=>{
     .catch(err=>{
       console.log(err)
     })
-
-    axios.post('/getlongi',{
+    console.log('lat',lattosave)
+console.log(longtosave)
+    axios.post('http://127.0.0.1:5000/getlongi',{
       longikey:longtosave
     })
     .then(res=>{
+  props.setStatus(2)
       console.log(res)
     })
     .catch(err=>{
@@ -156,7 +153,7 @@ useEffect(()=>{
 
 const initMap=()=>{
   map = new window.google.maps.Map(document.getElementById("map"), {
-    center:{lat:23,lng:78},
+    center:new window.google.maps.LatLng(23,78),
       zoom: 10,
       mapTypeControl: false,
       streetViewControl:false,

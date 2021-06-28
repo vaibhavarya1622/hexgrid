@@ -1,9 +1,14 @@
-from flask import Flask,request,send_from_directory
+from flask import Flask,request,send_from_directory,send_file
 import json
 import csv
 import pandas as pd
 from flask_cors import cross_origin
-from functions import nasadownload as nasa
+import nasadownload as nasa
+import solar
+import correl
+import fomatcsv
+import rem
+
 app = Flask(__name__,static_url_path='',static_folder='frontend/build')
 
 @app.route('/')
@@ -11,7 +16,7 @@ def index():
     return send_from_directory(app.static_folder,'index.html')
 
 @app.route('/getlati',methods=["POST"])
-# @cross_origin()
+@cross_origin()
 def getlati():
     if request.method == 'POST':
         value_lati = request.json['latikey']
@@ -20,30 +25,32 @@ def getlati():
         return "ok"
         
 @app.route('/getlongi',methods=["POST"])
-# @cross_origin()
+@cross_origin()
 def getlongi():
     if request.method == 'POST':
         value_longi = request.json['longikey']
         dfb = pd.DataFrame(value_longi,columns=["Longitudes"])
         dfb.to_csv('longitude.csv', index=False)
+        solar.getvals()
+        fomatcsv.convert()
+        correl.cor()
+        rem.unwanted()
         return "ok"
 
 @app.route('/submit',methods=["POST"])
-# @cross_origin()
+@cross_origin()
 def submit():
-    start_date=request.json['start_date']
-    end_date=request.json['end_date']
-    with open('dates.csv',mode='w') as csv_file:
-        writer=csv.DictWriter(csv_file,fieldnames=['start_date','end_date'])
-        writer.writeheader()
-        writer.writerow({'start_date':start_date,'end_date':end_date})
-    return "success",200
+    value=[request.json['start_date'].split('T')[0],request.json['end_date'].split('T')[0]]
+    print(value)
+    df=pd.DataFrame(value,columns=['dates'])
+    df.to_csv('dates.csv',index=False)
+    return 'ok',200
 
-@app.route('/fetch_from_nasa')
-# @cross_origin()
-def get_data():
-    nasa.getvals()
-    return 'success',200
+#download csv on download_csv.html
+@app.route('/download')
+@cross_origin()
+def download_file():
+    return send_file('corr_op.csv',as_attachment=True)
 
-# if __name__=='__main__':
-#     app.run(debug=True)
+if __name__=='__main__':
+    app.run(debug=True)
