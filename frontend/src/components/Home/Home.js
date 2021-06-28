@@ -45,7 +45,7 @@ const Home=(props)=>{
     
     const handleSubmit=(e)=>{
         e.preventDefault()
-        axios.post('http://127.0.0.1:5000/submit',{
+        axios.post('/submit',{
           start_date:startDate,
           end_date:endDate
         })
@@ -60,7 +60,7 @@ const Home=(props)=>{
       }
     const handleDownload=(e)=>{
       e.preventDefault();
-      axios.get('http://127.0.0.1:5000/download')
+      axios.get('/download')
       .then(response=>{
         FileDownload(response.data,'correlation.csv')
       })
