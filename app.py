@@ -2,7 +2,7 @@ from flask import Flask,request,send_from_directory,send_file
 import json
 import csv
 import pandas as pd
-from flask_cors import cross_origin
+# from flask_cors import cross_origin
 import nasadownload as nasa
 import solar
 import correl
@@ -16,7 +16,7 @@ def index():
     return send_from_directory(app.static_folder,'index.html')
 
 @app.route('/getlati',methods=["POST"])
-@cross_origin()
+# @cross_origin()
 def getlati():
     if request.method == 'POST':
         value_lati = request.json['latikey']
@@ -25,7 +25,7 @@ def getlati():
         return "ok"
         
 @app.route('/getlongi',methods=["POST"])
-@cross_origin()
+# @cross_origin()
 def getlongi():
     if request.method == 'POST':
         value_longi = request.json['longikey']
@@ -38,7 +38,7 @@ def getlongi():
         return "ok"
 
 @app.route('/submit',methods=["POST"])
-@cross_origin()
+# @cross_origin()
 def submit():
     value=[request.json['start_date'].split('T')[0],request.json['end_date'].split('T')[0]]
     print(value)
@@ -48,7 +48,7 @@ def submit():
 
 #download csv on download_csv.html
 @app.route('/download')
-@cross_origin()
+# @cross_origin()
 def download_file():
     return send_file('corr_op.csv',as_attachment=True)
 

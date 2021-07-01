@@ -6,6 +6,7 @@ import LocationOnIcon from '@material-ui/icons/LocationOn';
 import DatePicker from "react-datepicker";
 import "react-datepicker/dist/react-datepicker.css";
 import PropagateLoader from 'react-spinners/PropagateLoader'
+import Hexagon from './hexagonal.png'
 const FileDownload=require('js-file-download')
 
 const Home=(props)=>{
@@ -45,7 +46,7 @@ const Home=(props)=>{
     
     const handleSubmit=(e)=>{
         e.preventDefault()
-        axios.post('http://127.0.0.1:5000/submit',{
+        axios.post('/submit',{
           start_date:startDate,
           end_date:endDate
         })
@@ -60,7 +61,7 @@ const Home=(props)=>{
       }
     const handleDownload=(e)=>{
       e.preventDefault();
-      axios.get('http://127.0.0.1:5000/download')
+      axios.get('/download')
       .then(response=>{
         FileDownload(response.data,'correlation.csv')
         console.log(response)
@@ -82,7 +83,7 @@ const Home=(props)=>{
         <div className='form-page'>
           <div className="form">
               <div class="login-header">
-                  My Web App
+                  HexGrid <img style={{height:'1.4rem',width:'1.4rem'}} src={Hexagon} alt=''/>
               </div>
             <form>
               <div className="group">
@@ -125,6 +126,7 @@ const Home=(props)=>{
                 selectsStart
                 startDate={startDate}
                 endDate={endDate}
+                minDate={new Date('1981-01-03')}
                 maxDate={new Date('2021-05-29')}
                 onChange={date => {setStartDate(date)}}
                 />
