@@ -13,8 +13,8 @@ const Home=(props)=>{
     const [lat,setLat]=useState("")
     const [lng,setLng]=useState("")
     const [hexagon,setHexagon]=useState(false)
-    const [startDate,setStartDate]=useState(new Date())
-    const [endDate,setEndDate]=useState(new Date())
+    const [startDate,setStartDate]=useState(new Date('2021-05-29'))
+    const [endDate,setEndDate]=useState(new Date('2021-05-30'))
     const [status,setStatus]=useState(0)
 
     const myLocation=()=>{
@@ -53,7 +53,7 @@ const Home=(props)=>{
           console.log(response)
         })
         .catch(error=>{
-          console.log(error)
+          window.alert('error')
         })
         setStatus(1)
         setHexagon(true)
@@ -63,11 +63,12 @@ const Home=(props)=>{
       axios.get('/download')
       .then(response=>{
         FileDownload(response.data,'correlation.csv')
+        console.log(response)
       })
       .catch(error=>{
         console.log(error)
       })
-      window.location.reload(true)
+      // window.location.reload(true)
     }
       return(
         <div className='home'>
@@ -91,6 +92,7 @@ const Home=(props)=>{
                 value={radius}
                 placeholder="Enter radius" 
                 onChange={handleInput}
+                required
                 />
               </div>
               <div className="group">
@@ -100,6 +102,7 @@ const Home=(props)=>{
                 value={lat}
                 placeholder="Enter latitude"
                 onChange={handleInput}
+                required
                  />
               </div>
               <div className="group">
@@ -109,6 +112,7 @@ const Home=(props)=>{
                 value={lng}
                 placeholder="Enter Longitude"
                 onChange={handleInput}
+                required
                 />
                 <div className='location-button'>
                  <LocationOnIcon onClick={()=>myLocation()} style={{cursor:'pointer'}} />
@@ -121,7 +125,8 @@ const Home=(props)=>{
                 selectsStart
                 startDate={startDate}
                 endDate={endDate}
-                onChange={date => {setStartDate(date); console.log(startDate)}}
+                maxDate={new Date('2021-05-29')}
+                onChange={date => {setStartDate(date)}}
                 />
               </div>
               <div className='group'>
@@ -130,7 +135,8 @@ const Home=(props)=>{
                   selectsEnd
                   startDate={startDate}
                   endDate={endDate}
-                  minDate={startDate}
+                  minDate={new Date(startDate.getFullYear(),startDate.getMonth(),startDate.getDate()+1)}
+                  maxDate={new Date('2021-05-30')}
                   onChange={date => setEndDate(date)}
                 />
               </div>

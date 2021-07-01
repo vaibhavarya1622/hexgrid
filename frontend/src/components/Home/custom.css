@@ -88,7 +88,6 @@
   @media screen and (min-width:1700px) {
     .form{
       width: 400px;
-      height:270px;
       padding: 60px;
       font-size: 2rem;
     }

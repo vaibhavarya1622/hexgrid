@@ -134,7 +134,7 @@ useEffect(()=>{
       console.log(res)
     })
     .catch(err=>{
-      console.log(err)
+      window.alert(err)
     })
     console.log('lat',lattosave)
 console.log(longtosave)
@@ -146,7 +146,7 @@ console.log(longtosave)
       console.log(res)
     })
     .catch(err=>{
-      console.log(err)
+       window.alert(err)
     })
   }
 },[props.hexagon])
