@@ -45,7 +45,7 @@ const Home=(props)=>{
     
     const handleSubmit=(e)=>{
         e.preventDefault()
-        axios.post('/submit',{
+        axios.post('http://127.0.0.1:5000/submit',{
           start_date:startDate,
           end_date:endDate
         })
@@ -60,7 +60,7 @@ const Home=(props)=>{
       }
     const handleDownload=(e)=>{
       e.preventDefault();
-      axios.get('/download')
+      axios.get('http://127.0.0.1:5000/download')
       .then(response=>{
         FileDownload(response.data,'correlation.csv')
         console.log(response)
@@ -68,7 +68,7 @@ const Home=(props)=>{
       .catch(error=>{
         console.log(error)
       })
-      // window.location.reload(true)
+      window.location.reload(true)
     }
       return(
         <div className='home'>
