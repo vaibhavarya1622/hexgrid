@@ -2,7 +2,7 @@ from flask import Flask,request,send_from_directory,send_file
 import json
 import csv
 import pandas as pd
-from flask_cors import cross_origin
+# from flask_cors import cross_origin
 import nasadownload as nasa
 import solar
 import correl

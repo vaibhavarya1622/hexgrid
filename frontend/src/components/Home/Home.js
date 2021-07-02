@@ -54,7 +54,7 @@ const Home=(props)=>{
   
     const handleValidation=()=>{
       if(input_fields['radius'].test(radius)===false){
-        toast.error('Radius should be floating and greater than 0', {
+        toast.error('Enter valid Radius', {
           position: "top-center",
           autoClose: 5000,
           hideProgressBar: false,
