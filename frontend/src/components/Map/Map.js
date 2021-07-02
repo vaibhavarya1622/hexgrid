@@ -7,6 +7,7 @@ let hexapts=[]
 var hexaptsout = [];
 var lattosave = [];
 var longtosave = [];
+let marker;
 
 const IndexMap =(props)=> {
 function generate(pt) {
@@ -134,7 +135,9 @@ useEffect(()=>{
       console.log(res)
     })
     .catch(err=>{
-      window.alert(err)
+      window.alert(err+' please refresh page and try again')
+      window.location.reload(true)
+
     })
     console.log('lat',lattosave)
 console.log(longtosave)
@@ -146,11 +149,19 @@ console.log(longtosave)
       console.log(res)
     })
     .catch(err=>{
-       window.alert(err)
+      window.alert(err+' please refresh page and try again')
+      window.location.reload(true)
     })
   }
 },[props.hexagon])
 
+const geocodePosition=(pos)=>{
+  const geocoder=new window.google.maps.Geocoder()
+  geocoder.geocode({latLng:pos},()=>{
+    props.setLat(pos.lat())
+    props.setLng(pos.lng())
+  })
+}
 const initMap=()=>{
   map = new window.google.maps.Map(document.getElementById("map"), {
     center:new window.google.maps.LatLng(23,78),
@@ -159,7 +170,25 @@ const initMap=()=>{
       streetViewControl:false,
       fullscreenControl:false,
     })
+
+    marker=new window.google.maps.Marker({
+      map,
+      draggable:true,
+      position:new window.google.maps.LatLng(23,78)
+    })
+    window.google.maps.event.addListener(marker, 'dragend', function() 
+{
+    geocodePosition(marker.getPosition());
+});
 }
+useEffect(()=>{
+  if(map && props.lat && props.lng){
+    const point=new window.google.maps.LatLng(props.lat,props.lng)
+    marker.setPosition(point)
+    map.panTo(point)
+    map.setCenter(point)
+  }
+},[props.lat,props.lng])
 const renderMap = () => {
   loadScript(
     "https://maps.googleapis.com/maps/api/js?libraries=geometry&callback=initMap"

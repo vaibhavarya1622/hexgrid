@@ -2,13 +2,13 @@ from flask import Flask,request,send_from_directory,send_file
 import json
 import csv
 import pandas as pd
-# from flask_cors import cross_origin
+from flask_cors import cross_origin
 import nasadownload as nasa
 import solar
 import correl
 import fomatcsv
 import rem
-
+import formatcsv_dates
 app = Flask(__name__,static_url_path='',static_folder='frontend/build')
 
 @app.route('/')
@@ -33,6 +33,7 @@ def getlongi():
         dfb.to_csv('longitude.csv', index=False)
         solar.getvals()
         fomatcsv.convert()
+        formatcsv_dates.convert_dates()
         correl.cor()
         rem.unwanted()
         return "ok"

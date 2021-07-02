@@ -7,6 +7,9 @@ import DatePicker from "react-datepicker";
 import "react-datepicker/dist/react-datepicker.css";
 import PropagateLoader from 'react-spinners/PropagateLoader'
 import Hexagon from './hexagonal.png'
+import { ToastContainer, toast } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
+
 const FileDownload=require('js-file-download')
 
 const Home=(props)=>{
@@ -14,8 +17,8 @@ const Home=(props)=>{
     const [lat,setLat]=useState("")
     const [lng,setLng]=useState("")
     const [hexagon,setHexagon]=useState(false)
-    const [startDate,setStartDate]=useState(new Date('2021-05-29'))
-    const [endDate,setEndDate]=useState(new Date('2021-05-30'))
+    const [startDate,setStartDate]=useState()
+    const [endDate,setEndDate]=useState()
     const [status,setStatus]=useState(0)
 
     const myLocation=()=>{
@@ -43,9 +46,80 @@ const Home=(props)=>{
         setLng(value)
       }
     }
-    
+    const input_fields={
+      radius:new RegExp('([0-9]*[.])?[0-9]+'),
+      lat:new RegExp('([0-9]*[.])?[0-9]+'),
+      lng:new RegExp('([0-9]*[.])?[0-9]+'),
+    }
+  
+    const handleValidation=()=>{
+      if(input_fields['radius'].test(radius)===false){
+        toast.error('Radius should be floating and greater than 0', {
+          position: "top-center",
+          autoClose: 5000,
+          hideProgressBar: false,
+          closeOnClick: true,
+          pauseOnHover: true,
+          draggable: true,
+          progress: undefined,
+          });
+          return false
+      }
+      if(input_fields['lat'].test(lat)===false){
+        toast.error('Latitude is not valid', {
+          position: "top-center",
+          autoClose: 5000,
+          hideProgressBar: false,
+          closeOnClick: true,
+          pauseOnHover: true,
+          draggable: true,
+          progress: undefined,
+          });
+          return false
+      }
+      if(input_fields['lng'].test(lng)===false){
+        toast.error('Longitude is not valid', {
+          position: "top-center",
+          autoClose: 5000,
+          hideProgressBar: false,
+          closeOnClick: true,
+          pauseOnHover: true,
+          draggable: true,
+          progress: undefined,
+          });
+          return false
+      }
+      if(!startDate){
+        toast.error('Enter valid start Date', {
+          position: "top-center",
+          autoClose: 5000,
+          hideProgressBar: false,
+          closeOnClick: true,
+          pauseOnHover: true,
+          draggable: true,
+          progress: undefined,
+          });
+          return false
+      }
+      if(!endDate){
+        toast.error('Enter valid end Date', {
+          position: "top-center",
+          autoClose: 5000,
+          hideProgressBar: false,
+          closeOnClick: true,
+          pauseOnHover: true,
+          draggable: true,
+          progress: undefined,
+          });
+          return false
+      }
+      return true
+    }
+   
     const handleSubmit=(e)=>{
         e.preventDefault()
+        console.log(startDate,endDate)
+        if(handleValidation()){
         axios.post('/submit',{
           start_date:startDate,
           end_date:endDate
@@ -54,10 +128,12 @@ const Home=(props)=>{
           console.log(response)
         })
         .catch(error=>{
-          window.alert('error')
+          window.alert(error+" please try again")
+          window.location.reload(true)
         })
         setStatus(1)
         setHexagon(true)
+        }
       }
     const handleDownload=(e)=>{
       e.preventDefault();
@@ -67,18 +143,30 @@ const Home=(props)=>{
         console.log(response)
       })
       .catch(error=>{
-        console.log(error)
+        window.alert(error)
       })
-      window.location.reload(true)
     }
       return(
         <div className='home'>
+          <ToastContainer
+            position="top-center"
+            autoClose={5000}
+            hideProgressBar={false}
+            newestOnTop={false}
+            closeOnClick
+            rtl={false}
+            pauseOnFocusLoss
+            draggable
+            pauseOnHover
+            />
         <MapContainer 
         radius={radius}
         lat={lat}
         lng={lng}
         hexagon={hexagon}
         setStatus={setStatus}
+        setLat={setLat}
+        setLng={setLng}
         />
         <div className='form-page'>
           <div className="form">
@@ -129,6 +217,7 @@ const Home=(props)=>{
                 minDate={new Date('1981-01-03')}
                 maxDate={new Date('2021-05-29')}
                 onChange={date => {setStartDate(date)}}
+                placeholderText='Enter start date'
                 />
               </div>
               <div className='group'>
@@ -137,19 +226,20 @@ const Home=(props)=>{
                   selectsEnd
                   startDate={startDate}
                   endDate={endDate}
-                  minDate={new Date(startDate.getFullYear(),startDate.getMonth(),startDate.getDate()+1)}
+                  minDate={startDate && new Date(startDate.getFullYear(),startDate.getMonth(),startDate.getDate()+1)}
                   maxDate={new Date('2021-05-30')}
                   onChange={date => setEndDate(date)}
+                  placeholderText='Enter End date'
                 />
               </div>
               <div className='group'>
                 {
                   (status===0)?
-                    <button onClick={handleSubmit} className="button">Submit data!</button>
+                    <button onClick={handleSubmit} className="button">Submit</button>
                   :(status===1)?
                     <div className='loader'><PropagateLoader size={15}/></div>
                   :
-              <button  className="button" onClick={handleDownload}>Download data!</button>
+              <button  className="button" onClick={handleDownload}>Download</button>
                   }
               </div>
             </form>
