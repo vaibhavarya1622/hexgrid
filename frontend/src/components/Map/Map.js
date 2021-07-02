@@ -182,7 +182,7 @@ const initMap=()=>{
 });
 }
 useEffect(()=>{
-  if(map && props.lat && props.lng){
+  if(map && /^\d*\.?\d*$/.test(props.lat) && /^\d*\.?\d*$/.test(props.lng)){
     const point=new window.google.maps.LatLng(props.lat,props.lng)
     marker.setPosition(point)
     map.panTo(point)
