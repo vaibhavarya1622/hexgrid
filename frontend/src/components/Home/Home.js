@@ -53,7 +53,7 @@ const Home=(props)=>{
     }
   
     const handleValidation=()=>{
-      if(input_fields['radius'].test(radius)===false && radius<=0){
+      if(input_fields['radius'].test(radius)===false || Number(radius)<=0){
         toast.error('Enter valid Radius', {
           position: "top-center",
           autoClose: 5000,
@@ -65,7 +65,7 @@ const Home=(props)=>{
           });
           return false
       }
-      if(input_fields['lat'].test(lat)===false){
+      if(input_fields['lat'].test(lat)===false || Number(lat)<-90 || Number(lat)>90){
         toast.error('Latitude is not valid', {
           position: "top-center",
           autoClose: 5000,
@@ -77,7 +77,7 @@ const Home=(props)=>{
           });
           return false
       }
-      if(input_fields['lng'].test(lng)===false){
+      if(input_fields['lng'].test(lng)===false || Number(lng)<-180 || Number(lng)>180){
         toast.error('Longitude is not valid', {
           position: "top-center",
           autoClose: 5000,
