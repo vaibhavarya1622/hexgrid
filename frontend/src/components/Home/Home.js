@@ -53,7 +53,7 @@ const Home=(props)=>{
     }
   
     const handleValidation=()=>{
-      if(input_fields['radius'].test(radius)===false){
+      if(input_fields['radius'].test(radius)===false && radius<=0){
         toast.error('Enter valid Radius', {
           position: "top-center",
           autoClose: 5000,
