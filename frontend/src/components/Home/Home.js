@@ -47,9 +47,12 @@ const Home=(props)=>{
       }
     }
     const input_fields={
-      radius:new RegExp('([0-9]*[.])?[0-9]+'),
-      lat:new RegExp('([0-9]*[.])?[0-9]+'),
-      lng:new RegExp('([0-9]*[.])?[0-9]+'),
+      // radius:/([0-9]*[.])?[0-9]+/,
+      // lat:/([0-9]*[.])?[0-9]+/,
+      // lng:/([0-9]*[.])?[0-9]+/
+      radius:/^\d*\.?\d*$/,
+      lat:/^\d*\.?\d*$/,
+      lng:/^\d*\.?\d*$/
     }
   
     const handleValidation=()=>{
