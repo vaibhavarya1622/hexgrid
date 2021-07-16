@@ -1,5 +1,6 @@
 import React, {useEffect} from "react";
 import axios from 'axios'
+import LocationOnIcon from '@material-ui/icons/LocationOn';
 import './custom.css'
 
 let map
@@ -10,6 +11,19 @@ var longtosave = [];
 let marker;
 
 const IndexMap =(props)=> {
+  const myLocation=()=>{
+    var options = { maximumAge: 3000, timeout: 5000, enableHighAccuracy: true };//check if we don't get location in 30 seconds
+    var watchID = navigator.geolocation.getCurrentPosition(onSuccess, onError, options);
+}
+
+const onSuccess=(pos)=>{
+    props.setLat(pos.coords.latitude)
+    props.setLng(pos.coords.longitude)
+}
+
+const onError=(error)=>{
+    console.log(error)
+}
 function generate(pt) {
   var lati;
   var longi;
@@ -142,7 +156,8 @@ useEffect(()=>{
     console.log('lat',lattosave)
 console.log(longtosave)
     axios.post('/getlongi',{
-      longikey:longtosave
+      longikey:longtosave,
+      method:props.method
     })
     .then(res=>{
   props.setStatus(2)
@@ -162,6 +177,8 @@ const geocodePosition=(pos)=>{
     props.setLng(pos.lng())
   })
 }
+
+
 const initMap=()=>{
   map = new window.google.maps.Map(document.getElementById("map"), {
     center:new window.google.maps.LatLng(23,78),
@@ -180,7 +197,43 @@ const initMap=()=>{
 {
     geocodePosition(marker.getPosition());
 });
+const location=document.getElementById('location')
+map.controls[window.google.maps.ControlPosition.TOP_LEFT].push(location);
+//SearchBar start
+// const input = document.getElementById("mapsearch");
+// const searchBox = new window.google.maps.places.SearchBox(input);
+// // Bias the SearchBox results towards current map's viewport.
+// map.addListener("bounds_changed", () => {
+//   searchBox.setBounds(map.getBounds());
+// });
+
+// searchBox.addListener("places_changed", () => {
+//   const places = searchBox.getPlaces();
+
+//   if (places.length === 0) {
+//     return;
+//   }
+//   // For each place, get the icon, name and location.
+//   const bounds = new window.google.maps.LatLngBounds();
+//   places.forEach((place) => {
+//     if (!place.geometry) {
+//       console.log("Returned place contains no geometry");
+//       return;
+//     }
+//     if (place.geometry.viewport) {
+//       bounds.union(place.geometry.viewport);
+//     } else {
+//       bounds.extend(place.geometry.location);
+//     }
+//     props.setLat(place.geometry.location.lat())
+//     props.setLng(place.geometry.location.lng())
+//   });
+//   map.fitBounds(bounds);
+// });
+
+//Search Bar ends
 }
+
 useEffect(()=>{
   if(map && /^[+-]?([0-9]*[.])?[0-9]+$/.test(props.lat) && /^[+-]?([0-9]*[.])?[0-9]+$/.test(props.lng)){
     const point=new window.google.maps.LatLng(props.lat,props.lng)
@@ -198,8 +251,23 @@ const renderMap = () => {
 useEffect(()=>{
   renderMap()
 },[])
+
 return (
-<div id="map" className="map"></div>
+  <>
+  {/* <div id="searchbar">
+    <input
+      placeholder="Search the Location                              &#xF002;"
+      // placeholder="Search the Location                              🔍"
+      className="input"
+      id="mapsearch"
+    />
+</div> */}
+   
+   <LocationOnIcon id='location' fontSize='large' onClick={()=>myLocation()} style={{cursor:'pointer'}}>
+     My Location
+    </LocationOnIcon>
+  <div id="map" className="map"></div>
+  </>
 )
 }
 function loadScript(url) {

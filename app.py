@@ -29,12 +29,13 @@ def getlati():
 def getlongi():
     if request.method == 'POST':
         value_longi = request.json['longikey']
+        method=int(request.json['method'])
         dfb = pd.DataFrame(value_longi,columns=["Longitudes"])
         dfb.to_csv('longitude.csv', index=False)
         solar.getvals()
         fomatcsv.convert()
         formatcsv_dates.convert_dates()
-        correl.cor()
+        correl.cor(method)
         rem.unwanted()
         return "ok"
 
@@ -48,10 +49,25 @@ def submit():
     return 'ok',200
 
 #download csv on download_csv.html
-@app.route('/download')
+@app.route('/download_correlation')
 # @cross_origin()
-def download_file():
+def download_corr():
     return send_file('corr_op.csv',as_attachment=True)
+
+@app.route('/download_lat')
+# @cross_origin()
+def download_lat():
+    return send_file('latitude.csv',as_attachment=True)
+
+@app.route('/download_lon')
+# @cross_origin()
+def download_lng():
+    return send_file('longitude.csv',as_attachment=True)
+
+@app.route('/download_final')
+# @cross_origin()
+def download_final():
+    return send_file('final_save_dates.csv',as_attachment=True)
 
 if __name__=='__main__':
     app.run(debug=True)

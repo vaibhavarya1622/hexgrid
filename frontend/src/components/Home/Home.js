@@ -1,39 +1,29 @@
-import React,{useState} from 'react'
-import './custom.css'
+import React,{useState,Fragment} from 'react'
 import MapContainer from './../Map/Map'
 import axios from 'axios'
-import LocationOnIcon from '@material-ui/icons/LocationOn';
-import DatePicker from "react-datepicker";
-import "react-datepicker/dist/react-datepicker.css";
 import PropagateLoader from 'react-spinners/PropagateLoader'
 import Hexagon from './hexagonal.png'
 import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
-
+import 'bootstrap/dist/css/bootstrap.min.css'
+import {FormSection,Info,Form,NoBullet,Input,Select,Button,Modal,loader} from './Home.styles'
 const FileDownload=require('js-file-download')
 
+var alertRedInput = "#8C1010";
+var defaultInput = "rgba(10, 180, 180, 1)";
+
 const Home=(props)=>{
+
     const [radius,setRadius]=useState("")
     const [lat,setLat]=useState("")
     const [lng,setLng]=useState("")
     const [hexagon,setHexagon]=useState(false)
-    const [startDate,setStartDate]=useState()
-    const [endDate,setEndDate]=useState()
-    const [status,setStatus]=useState(0)
+    const [startDate,setStartDate]=useState('')
+    const [endDate,setEndDate]=useState('')
+    const [method,setMethod]=useState(1)
+    const [status,setStatus]=useState(0) 
+    const [showModal,setShowModal]=useState(false)
 
-    const myLocation=()=>{
-      var options = { maximumAge: 3000, timeout: 5000, enableHighAccuracy: true };//check if we don't get location in 30 seconds
-      var watchID = navigator.geolocation.getCurrentPosition(onSuccess, onError, options);
-  }
-  
-  const onSuccess=(pos)=>{
-      setLat(pos.coords.latitude)
-      setLng(pos.coords.longitude)
-  }
-  
-  const onError=(error)=>{
-      console.log(error)
-  }
     const handleInput=(e)=>{
       const {name,value}=e.target
       if(name==='radius'){
@@ -44,6 +34,9 @@ const Home=(props)=>{
       }
       else if(name==='lng'){
         setLng(value)
+      }
+      else if(name==='method'){
+        setMethod(value)
       }
     }
     const input_fields={
@@ -66,7 +59,8 @@ const Home=(props)=>{
           draggable: true,
           progress: undefined,
           });
-          return false
+        document.getElementById('radius').style.borderColor=alertRedInput
+        return false
       }
       if(input_fields['lat'].test(lat)===false || Number(lat)<-90 || Number(lat)>90){
         toast.error('Latitude is not valid', {
@@ -78,6 +72,7 @@ const Home=(props)=>{
           draggable: true,
           progress: undefined,
           });
+        document.getElementById('lat').style.borderColor=alertRedInput
           return false
       }
       if(input_fields['lng'].test(lng)===false || Number(lng)<-180 || Number(lng)>180){
@@ -90,6 +85,7 @@ const Home=(props)=>{
           draggable: true,
           progress: undefined,
           });
+        document.getElementById('lng').style.borderColor=alertRedInput
           return false
       }
       if(!startDate){
@@ -102,6 +98,7 @@ const Home=(props)=>{
           draggable: true,
           progress: undefined,
           });
+        document.getElementById('start_date').style.borderColor=alertRedInput
           return false
       }
       if(!endDate){
@@ -114,6 +111,7 @@ const Home=(props)=>{
           draggable: true,
           progress: undefined,
           });
+        document.getElementById('end_date').style.borderColor=alertRedInput
           return false
       }
       return true
@@ -121,8 +119,14 @@ const Home=(props)=>{
    
     const handleSubmit=(e)=>{
         e.preventDefault()
-        console.log(startDate,endDate)
         if(handleValidation()){
+         
+          document.getElementById('radius').borderColor=defaultInput
+          document.getElementById('lat').borderColor=defaultInput
+          document.getElementById('lng').borderColor=defaultInput
+          document.getElementById('start_date').borderColor=defaultInput
+          document.getElementById('end_date').borderColor=defaultInput
+
         axios.post('/submit',{
           start_date:startDate,
           end_date:endDate
@@ -138,117 +142,195 @@ const Home=(props)=>{
         setHexagon(true)
         }
       }
-    const handleDownload=(e)=>{
-      e.preventDefault();
-      axios.get('/download')
-      .then(response=>{
-        FileDownload(response.data,'correlation.csv')
-        console.log(response)
-      })
-      .catch(error=>{
-        window.alert(error)
-      })
-    }
-      return(
-        <div className='home'>
-          <ToastContainer
-            position="top-center"
-            autoClose={5000}
-            hideProgressBar={false}
-            newestOnTop={false}
-            closeOnClick
-            rtl={false}
-            pauseOnFocusLoss
-            draggable
-            pauseOnHover
-            />
-        <MapContainer 
-        radius={radius}
-        lat={lat}
-        lng={lng}
-        hexagon={hexagon}
-        setStatus={setStatus}
-        setLat={setLat}
-        setLng={setLng}
-        />
-        <div className='form-page'>
-          <div className="form">
-              <div class="login-header">
-                  HexGrid <img style={{height:'1.4rem',width:'1.4rem'}} src={Hexagon} alt=''/>
-              </div>
-            <form>
-              <div className="group">
-                <input
-                type="text"
-                name="radius"
-                value={radius}
-                placeholder="Enter radius" 
-                onChange={handleInput}
-                required
-                />
-              </div>
-              <div className="group">
-                <input
-                type="text"
-                name="lat"
-                value={lat}
-                placeholder="Enter latitude"
-                onChange={handleInput}
-                required
-                 />
-              </div>
-              <div className="group">
-                <input
-                type="text"
-                name="lng"
-                value={lng}
-                placeholder="Enter Longitude"
-                onChange={handleInput}
-                required
-                />
-                <div className='location-button'>
-                 <LocationOnIcon onClick={()=>myLocation()} style={{cursor:'pointer'}} />
-                 Click to set current location
-                </div>
-              </div>
-              <div className='group'>
-                <DatePicker
-                selected={startDate}
-                selectsStart
-                startDate={startDate}
-                endDate={endDate}
-                minDate={new Date('1981-01-03')}
-                maxDate={new Date('2021-05-29')}
-                onChange={date => {setStartDate(date)}}
-                placeholderText='Enter start date'
-                />
-              </div>
-              <div className='group'>
-                <DatePicker
-                  selected={endDate}
-                  selectsEnd
-                  startDate={startDate}
-                  endDate={endDate}
-                  minDate={startDate && new Date(startDate.getFullYear(),startDate.getMonth(),startDate.getDate()+1)}
-                  maxDate={new Date('2021-05-30')}
-                  onChange={date => setEndDate(date)}
-                  placeholderText='Enter End date'
-                />
-              </div>
-              <div className='group'>
-                {
-                  (status===0)?
-                    <button onClick={handleSubmit} className="button">Submit</button>
-                  :(status===1)?
-                    <div className='loader'><PropagateLoader size={15}/></div>
-                  :
-              <button  className="button" onClick={handleDownload}>Download</button>
-                  }
-              </div>
-            </form>
-          </div>
+      const downloadCorrelation=()=>{
+        axios.get('/download_correlation')
+        .then(response=>{
+          FileDownload(response.data,'correlation.csv')
+          console.log(response)
+        })
+        .catch(error=>{
+          window.alert(error)
+        })
+      }
+      const downloadFinal=()=>{
+        axios.get('/download_final')
+        .then(response=>{
+          FileDownload(response.data,'intermediate.csv')
+          console.log(response)
+        })
+        .catch(error=>{
+          window.alert(error)
+        })
+      }
+      const modal=(
+          <Modal showModal={showModal}>
+                <div className='modal-dialog' role='document'>
+                  <div className='modal-content'>
+                    <div className='modal-header'>
+                      <h5 className='modal-title'>Downloads</h5>
+                    <button type='button' className='btn-close' onClick={()=>setShowModal(false)} aria-label='Close'>
+                      <span aria-hidden='true'></span>
+                    </button>
+                    </div>
+                    <div className='modal-body' style={{display:'flex',flexDirection:'row',justifyContent:'space-evenly'}}>
+                      <button type='button' className='btn btn-primary' onClick={downloadCorrelation}>Correlation</button>
+                      <button type='button' className='btn btn-primary' onClick={downloadFinal}>Intermediate</button>
+                    </div>
+                    <div className='modal-footer'>
+                      <button type='button' className='btn btn-secondary' onClick={()=>setShowModal(false)}>Close</button>
+            </div>
           </div>
         </div>
-        )
+      </Modal>
+    )
+    const handleDownload=(e)=>{
+      e.preventDefault();
+      setShowModal(true)
+    }
+    return(
+      <>
+      {modal}
+        <ToastContainer
+          position="top-center"
+          autoClose={5000}
+          hideProgressBar={false}
+          newestOnTop={false}
+          closeOnClick
+          rtl={false}
+          pauseOnFocusLoss
+          draggable
+          pauseOnHover
+          />
+     <FormSection>
+       <Info>
+            {/* <h2>HexGrid</h2>
+            <i className="icon ion-ios-ionic-outline" aria-hidden="true"></i>
+            <p>The Future Is Here</p> */}
+             <MapContainer 
+              radius={radius}
+              lat={lat}
+              lng={lng}
+              hexagon={hexagon}
+              setStatus={setStatus}
+              setLat={setLat}
+              setLng={setLng}
+              method={method}
+              />
+       </Info>
+        <Form> 
+          <h2>HexGrid 
+          <img className='icon' src={Hexagon} style={{height:'1.6rem',width:'1.6rem',marginLeft:'8px'}}alt=''/>
+          </h2>
+          <NoBullet>
+           <li>
+            <label for="radius"></label>
+              <Input 
+              type="text" 
+              name='radius' 
+              value={radius} 
+              onChange={handleInput} 
+              placeholder='Enter Radius'
+              // className={` ${validRadius?'':'is-invalid'}`}
+              id="radius" />
+              {/* {validRadius?'':<div className="invalid-feedback">Radius must be greater than 0</div>} */}
+              </li>
+           <li>
+            <label for="lat"></label>
+              <Input 
+              type="text" 
+              name='lat' 
+              value={lat} 
+              onChange={handleInput} 
+              placeholder='Enter Latitude'
+              // className={`form-control ${validLat?'':'is-invalid'}`}
+              id="lat" 
+              />
+            </li>
+            <li>
+            <label for="lng"></label>
+              <Input 
+              type="text" 
+              name='lng' 
+              value={lng} 
+              onChange={handleInput} 
+              placeholder='Enter Longitude'
+              // className={`form-control ${validLng?'':'is-invalid'}`}
+              id="lng" 
+              />
+            </li>
+            <li>
+            <label for="startDate"></label>
+            {/* <DatePicker
+              selected={startDate}
+              selectsStart
+              startDate={startDate}
+              endDate={endDate}
+              minDate={new Date('1981-01-03')}
+              maxDate={new Date('2021-05-29')}
+              onChange={date => {setStartDate(date)}}
+              placeholderText='Enter start date'
+              component={Input}
+              /> */}
+              <Input type='text'
+               id='start_date'
+               min='1981-01-03'
+               max='2021-05-29'
+               onFocus={(e)=>e.target.type='date'} 
+               onBlur={(e)=>e.target.type='text'}
+               placeholder='Enter Start Date' name='startDate'
+               value={startDate} 
+               onChange={(e)=>setStartDate(e.target.value)} />
+              </li>
+            <li>
+            <label for="endDate"></label>
+              {/* <DatePicker
+                selected={endDate}
+                selectsEnd
+                startDate={startDate}
+                endDate={endDate}
+                minDate={startDate && new Date(startDate.getFullYear(),startDate.getMonth(),startDate.getDate()+1)}
+                maxDate={new Date('2021-05-30')}
+                onChange={date => setEndDate(date)}
+                placeholderText='Enter End date'
+                // className='form-control'
+              /> */}
+              <Input type='text' 
+              id='end_date'
+              min={startDate}
+              max='2021-05-30'
+              onFocus={(e)=>e.target.type='date'} 
+              onBlur={(e)=>e.target.type='text'}
+              placeholder='Enter End Date' name='endDate' value={endDate}
+              onChange={(e)=>setEndDate(e.target.value)} 
+               />
+            </li>
+            <li>
+              <label for='method'></label>
+              <Select  id='method' name='method' onChange={handleInput}>
+                <option value='1'>Pearson</option>
+                <option value='2'>Kendall</option>
+                <option value='3'>Spearman</option>
+                <option value='4'>Other method 1</option>
+                <option value='5'>Other method 2</option>
+              </Select>
+              </li>
+            <li>
+              {
+                (status===0)?
+                  <Button onClick={handleSubmit} >Submit</Button>
+                :(status===1)?
+                  <loader><PropagateLoader color='rgba(10, 180, 180, 1)' size={15}/></loader>
+                :
+            <Button   
+            onClick={handleDownload}
+            >Downloads
+            </Button>
+          }
+            </li>
+            </NoBullet>
+          </Form> 
+        </FormSection>
+      </>
+      )
     }
   export default Home;
