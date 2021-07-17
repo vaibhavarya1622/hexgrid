@@ -6,8 +6,11 @@ import io
 import os
 import csv
 from pandas import *
+import seaborn as sns
+import scipy.stats as stats
 from numpy import loadtxt
 from xgboost import XGBRegressor
+from matplotlib import pyplot
 from tslearn.metrics import dtw, dtw_path
 #%matplotlib inline
 
@@ -72,8 +75,11 @@ def cor(mthd):
                 correlated_features.add(colname)
     else:
         correlated_features.add("v0")
+        val_range = set(df_corr)
+        val_range=sorted(val_range)
+        val_range=val_range[0:5]
         for i in range(len(df_corr)):
-            if df_corr[i] > 0.1:
+            if df_corr[i] in val_range:#earlier it was >0.1
                 colname = "v{nm}".format(nm=(i+1))
                 correlated_features.add(colname)
     #list correlation ans
