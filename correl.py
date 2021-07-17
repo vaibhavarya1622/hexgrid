@@ -6,11 +6,7 @@ import io
 import os
 import csv
 from pandas import *
-import seaborn as sns
-import scipy.stats as stats
-from numpy import loadtxt
 from xgboost import XGBRegressor
-from matplotlib import pyplot
 from tslearn.metrics import dtw, dtw_path
 #%matplotlib inline
 
