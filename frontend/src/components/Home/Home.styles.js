@@ -59,6 +59,10 @@ background: rgba(20, 20, 20, .2);
 color: white;
 outline: none;
 `
+export const Option=styled.option`
+background:rgba(20,20,20,0.2);
+color:black;
+`
 export const Button=styled.button`
 border: 1px solid rgba(10, 180, 180, 1);
 background: rgba(20, 20, 20, .6);
@@ -88,7 +92,7 @@ ${props=>props.showModal&&
 `display:block`
 }
 `
-export const loader=styled.div`
+export const Loader=styled.div`
     text-align: center;
     padding:10px;
     margin-top: 20px;

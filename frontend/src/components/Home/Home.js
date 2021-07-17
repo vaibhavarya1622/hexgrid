@@ -6,7 +6,7 @@ import Hexagon from './hexagonal.png'
 import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 import 'bootstrap/dist/css/bootstrap.min.css'
-import {FormSection,Info,Form,NoBullet,Input,Select,Button,Modal,loader} from './Home.styles'
+import {FormSection,Info,Form,NoBullet,Input,Select,Button,Modal,Loader,Option} from './Home.styles'
 const FileDownload=require('js-file-download')
 
 var alertRedInput = "#8C1010";
@@ -159,7 +159,7 @@ const Home=(props)=>{
       const downloadCorrelation=()=>{
         axios.get('/download_correlation')
         .then(response=>{
-          FileDownload(response.data,'correlation.csv')
+          FileDownload(response.data,'correlated.csv')
           console.log(response)
         })
         .catch(error=>{
@@ -169,7 +169,7 @@ const Home=(props)=>{
       const downloadFinal=()=>{
         axios.get('/download_final')
         .then(response=>{
-          FileDownload(response.data,'intermediate.csv')
+          FileDownload(response.data,'multiple_locations.csv')
           console.log(response)
         })
         .catch(error=>{
@@ -326,12 +326,12 @@ const Home=(props)=>{
             <li>
               <label for='method'></label>
               <Select  id='method' name='method' onChange={handleInput} required>
-                <option selected disabled value='0'>Select Correlation method</option>
-                <option value='1'>Pearson</option>
-                <option value='2'>Kendall</option>
-                <option value='3'>Spearman</option>
-                <option value='4'>XGBoost</option>
-                <option value='5'>Dynamic time warping</option>
+                <Option selected disabled value='0'>Select Correlation method</Option>
+                <Option value='1'>Pearson</Option>
+                <Option value='2'>Kendall</Option>
+                <Option value='3'>Spearman</Option>
+                <Option value='4'>XGBoost</Option>
+                <Option value='5'>Dynamic time warping</Option>
               </Select>
               </li>
             <li>
@@ -339,7 +339,7 @@ const Home=(props)=>{
                 (status===0)?
                   <Button onClick={handleSubmit} >Submit</Button>
                 :(status===1)?
-                  <loader><PropagateLoader color='rgba(10, 180, 180, 1)' size={15}/></loader>
+                  <Loader><PropagateLoader color='rgba(10, 180, 180, 1)' size={15}/></Loader>
                 :
             <Button   
             onClick={handleDownload}
