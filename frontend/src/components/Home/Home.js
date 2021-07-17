@@ -20,7 +20,7 @@ const Home=(props)=>{
     const [hexagon,setHexagon]=useState(false)
     const [startDate,setStartDate]=useState('')
     const [endDate,setEndDate]=useState('')
-    const [method,setMethod]=useState(1)
+    const [method,setMethod]=useState('0')
     const [status,setStatus]=useState(0) 
     const [showModal,setShowModal]=useState(false)
 
@@ -36,6 +36,7 @@ const Home=(props)=>{
         setLng(value)
       }
       else if(name==='method'){
+        console.log(value)
         setMethod(value)
       }
     }
@@ -114,13 +115,26 @@ const Home=(props)=>{
         document.getElementById('end_date').style.borderColor=alertRedInput
           return false
       }
+      if(method==='0'){
+        toast.error('Please select method', {
+          position: "top-center",
+          autoClose: 5000,
+          hideProgressBar: false,
+          closeOnClick: true,
+          pauseOnHover: true,
+          draggable: true,
+          progress: undefined,
+          });
+          document.getElementById('method').style.borderColor=alertRedInput;
+          return false;
+      }
       return true
     }
    
     const handleSubmit=(e)=>{
         e.preventDefault()
         if(handleValidation()){
-         
+         console.log(method)
           document.getElementById('radius').borderColor=defaultInput
           document.getElementById('lat').borderColor=defaultInput
           document.getElementById('lng').borderColor=defaultInput
@@ -173,8 +187,8 @@ const Home=(props)=>{
                     </button>
                     </div>
                     <div className='modal-body' style={{display:'flex',flexDirection:'row',justifyContent:'space-evenly'}}>
-                      <button type='button' className='btn btn-primary' onClick={downloadCorrelation}>Correlation</button>
-                      <button type='button' className='btn btn-primary' onClick={downloadFinal}>Intermediate</button>
+                      <button type='button' className='btn btn-primary' onClick={downloadCorrelation}>Correlated Locations data</button>
+                      <button type='button' className='btn btn-primary' onClick={downloadFinal}>Multiple Locations data</button>
                     </div>
                     <div className='modal-footer'>
                       <button type='button' className='btn btn-secondary' onClick={()=>setShowModal(false)}>Close</button>
@@ -231,7 +245,8 @@ const Home=(props)=>{
               onChange={handleInput} 
               placeholder='Enter Radius'
               // className={` ${validRadius?'':'is-invalid'}`}
-              id="radius" />
+              id="radius"
+              required />
               {/* {validRadius?'':<div className="invalid-feedback">Radius must be greater than 0</div>} */}
               </li>
            <li>
@@ -244,6 +259,7 @@ const Home=(props)=>{
               placeholder='Enter Latitude'
               // className={`form-control ${validLat?'':'is-invalid'}`}
               id="lat" 
+              required
               />
             </li>
             <li>
@@ -256,6 +272,7 @@ const Home=(props)=>{
               placeholder='Enter Longitude'
               // className={`form-control ${validLng?'':'is-invalid'}`}
               id="lng" 
+              required
               />
             </li>
             <li>
@@ -279,7 +296,8 @@ const Home=(props)=>{
                onBlur={(e)=>e.target.type='text'}
                placeholder='Enter Start Date' name='startDate'
                value={startDate} 
-               onChange={(e)=>setStartDate(e.target.value)} />
+               onChange={(e)=>setStartDate(e.target.value)}
+               required />
               </li>
             <li>
             <label for="endDate"></label>
@@ -302,16 +320,18 @@ const Home=(props)=>{
               onBlur={(e)=>e.target.type='text'}
               placeholder='Enter End Date' name='endDate' value={endDate}
               onChange={(e)=>setEndDate(e.target.value)} 
+              required
                />
             </li>
             <li>
               <label for='method'></label>
-              <Select  id='method' name='method' onChange={handleInput}>
+              <Select  id='method' name='method' onChange={handleInput} required>
+                <option selected disabled value='0'>Select Correlation method</option>
                 <option value='1'>Pearson</option>
                 <option value='2'>Kendall</option>
                 <option value='3'>Spearman</option>
-                <option value='4'>Other method 1</option>
-                <option value='5'>Other method 2</option>
+                <option value='4'>XGBoost</option>
+                <option value='5'>Dynamic time warping</option>
               </Select>
               </li>
             <li>
