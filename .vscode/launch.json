@@ -10,7 +10,8 @@
             "request": "launch",
             "program": "${file}",
             "console": "integratedTerminal",
-            "python": "${command:python.interpreterPath}"
+            "python": "${command:python.interpreterPath}",
+            "envFile": "${workspaceFolder}/env"
         },
         {
             "name": "Python: Current File",

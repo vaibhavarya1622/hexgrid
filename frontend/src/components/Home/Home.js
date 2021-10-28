@@ -141,7 +141,7 @@ const Home=(props)=>{
           document.getElementById('start_date').borderColor=defaultInput
           document.getElementById('end_date').borderColor=defaultInput
 
-        axios.post('/submit',{
+        axios.post('http://127.0.0.1:5000/getstartd',{
           start_date:startDate,
           end_date:endDate
         })
@@ -157,7 +157,7 @@ const Home=(props)=>{
         }
       }
       const downloadCorrelation=()=>{
-        axios.get('/download_correlation')
+        axios.get('http://127.0.0.1:5000/download_csv')
         .then(response=>{
           FileDownload(response.data,'correlated.csv')
           console.log(response)
@@ -167,7 +167,7 @@ const Home=(props)=>{
         })
       }
       const downloadFinal=()=>{
-        axios.get('/download_final')
+        axios.get('http://127.0.0.1:5000/download_inter')
         .then(response=>{
           FileDownload(response.data,'multiple_locations.csv')
           console.log(response)

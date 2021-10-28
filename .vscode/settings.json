@@ -1,8 +1,18 @@
 {
-    "python.envFile": "/home/vaibhav/hexgrid/myapp/env",
+    "python.envFile": "/home/vaibhav/hexgrid/env/bin/activate",
     "python.analysis.extraPaths": [
         "/home/vaibhav/hexgrid/myapp/env/lib/python3.8/site-packages",
     ],
     "python.analysis.autoImportCompletions": true,
-    "python.defaultInterpreterPath": "/home/vaibhav/hexgrid/myapp/env/lib/python3.8"
+    "python.defaultInterpreterPath": "/home/vaibhav/hexgrid/env/lib/python3.8",
+    "python.pythonPath": "/home/vaibhav/hexgrid/env/lib/python3.8",
+    "python.testing.unittestArgs": [
+        "-v",
+        "-s",
+        ".",
+        "-p",
+        "*test.py"
+    ],
+    "python.testing.pytestEnabled": false,
+    "python.testing.unittestEnabled": true
 }
